@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package contracts;
+
+// Model service API
+
+service ModelService {
+  rpc GetEmbeddings (NewsMessage) returns (NewsMessage) {}
+}
+
+
+// Utility messages
+
+message NewsMessage {
+  string Title = 1;
+  string Body = 2;
+  int64 Timestamp = 3;
+  repeated double Embeddings = 4;
+}
