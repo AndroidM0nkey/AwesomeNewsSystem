@@ -16,4 +16,5 @@ message NewsMessage {
   string Body = 2;
   int64 Timestamp = 3;
   repeated double Embeddings = 4;
+  string ID = 5;
 }
