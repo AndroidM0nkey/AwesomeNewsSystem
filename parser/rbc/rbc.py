@@ -1,6 +1,5 @@
 from requests import get
 from bs4 import BeautifulSoup
-from pandas import DataFrame
 from time import sleep
 
 INTERVAL = 10 # in seconds 
@@ -21,7 +20,6 @@ def processed_href(href):
 def start():
     while 1:
         r = get(f"https://www.rbc.ru/v10/ajax/get-news-by-filters/?category=economics&limit=20")
-        print(r.status_code)
         if r.status_code != 200:
             break
         soup = BeautifulSoup(r.json()["html"], 'html.parser')

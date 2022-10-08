@@ -5,8 +5,7 @@ from time import sleep
 page_url = "https://www.forbes.ru/tegi/ekonomika?page=1"
 base_url = "https://www.forbes.ru"
 
-# title,text,ts
-res = {"title":[], "text":[]}
+# title,text
 
 INTERVAL = 10 # in seconds 
 processed = "processed.txt"

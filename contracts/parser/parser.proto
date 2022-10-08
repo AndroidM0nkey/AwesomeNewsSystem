@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package parser;
+
+message ParsedArticle {
+  string Title = 1;
+  string Body = 2;
+  int64 Timestamp = 3;
+}
