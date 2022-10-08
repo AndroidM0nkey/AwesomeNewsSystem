@@ -19,6 +19,12 @@ message NewsMessage {
   ModelServiceAnswer ML = 5;
 }
 
+message ParsedArticle {
+  string Title = 1;
+  string Body = 2;
+  int64 Timestamp = 3;
+}
+
 message ModelServiceAnswer {
   repeated CategoryInfo Categories = 1;
   repeated double Embeddings = 2;
