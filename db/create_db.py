@@ -7,10 +7,10 @@ try:
 
     create_table_query = '''CREATE TABLE newsdata
                             (TIMESTAMP INT PRIMARY KEY NOT NULL,
-                            TITLE           TEXT,
+                            TITLE           TEXT NOT NULL,
                             BODY            TEXT NOT NULL,
                             ID              TEXT NOT NULL,
-                            ML              TEXT); '''
+                            ML              bytea NOT NULL); '''
 
     cur.execute(create_table_query)
     conn.commit()
