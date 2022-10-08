@@ -7,6 +7,11 @@ import contracts_pb2_grpc
 import psycopg2
 
 
+def get_random_string():
+    letters = string.ascii_letters
+    return''.join(random.choice(letters) for i in range(10))
+
+
 MODEL_SERVICE_IP = 'localhost:8001'
 
 def main():
@@ -32,7 +37,7 @@ def main():
         ml = msg.ML
         ml.CopyFrom(msg.ML)
         mlString = ml.SerializeToString()
-        cur.execute("""INSERT INTO newsdata (TIMESTAMP,TITLE,BODY,ID,ML) VALUES (%s, %s, %s, %s, %s)""", (msg.Timestamp, msg.Title, msg.Body, msg.ID, mlString))
+        cur.execute("""INSERT INTO newsdata (TIMESTAMP,TITLE,BODY,ID,ML) VALUES (%s, %s, %s, %s, %s)""", (msg.Timestamp, msg.Title, msg.Body, get_random_string, mlString))
 
         cur.close()
 
