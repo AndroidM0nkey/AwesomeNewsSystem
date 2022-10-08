@@ -17,6 +17,7 @@ MODEL_SERVICE_PORT = 8001
 
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/rubert-tiny")
 labels = {'BUH':0, 'HR':1, 'BDG':2, 'GZ':3, 'MED':4, 'JUR':5 }
+id2labels = {val : key for key, val in labels.items()}
 
 class BertClassifier(nn.Module):
 
@@ -48,14 +49,13 @@ model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
 
 
-def calculate_embedding(proto):
+def calculate_embeddings(proto):
     text = proto.Body
     title = proto.Title
     with torch.no_grad():
         model.eval()
         X = tokenizer(f"{title} [SEP] {text}", padding='max_length',
                        max_length=512, truncation=True, return_tensors="pt")
-        # X = X.reshape(1, *X.shape)
         use_cuda = torch.cuda.is_available()
         device = torch.device("cuda" if use_cuda else "cpu")
         X = X.to(device)
@@ -64,7 +64,7 @@ def calculate_embedding(proto):
         pred = model(input_id, mask)
         embedding = model.pooled_output.to('cpu').numpy().tolist()
     
-    return embedding
+    return embedding[0]
 
 
 def calculate_categories(proto):
@@ -74,17 +74,16 @@ def calculate_categories(proto):
         model.eval()
         X = tokenizer(f"{title} [SEP] {text}", padding='max_length',
                        max_length=512, truncation=True, return_tensors="pt")
-        # X = X.reshape(1, *X.shape)
-        use_cuda = torch.cuda.is_available()
-        device = torch.device("cuda" if use_cuda else "cpu")
+        
         X = X.to(device)
         mask = X['attention_mask'].to(device)
         input_id = X['input_ids'].squeeze(1).to(device)
         pred = model(input_id, mask)
+        pred = pred.to('cpu').numpy()[0]
 
     categoriesList = []
     for i in range(len(pred)):
-        catInfo = CategoryInfo(Category=labels[i], Probability=(pred[i]))
+        catInfo = CategoryInfo(Category=id2labels[i], Probability=(pred[i]))
         categoriesList.append(catInfo)
     return categoriesList
 
@@ -92,6 +91,8 @@ def calculate_categories(proto):
 class ModelService(contracts_pb2_grpc.ModelServiceServicer):
 
     def GetModelServiceAnswer(self, request, context):
+        # logging.warning(calculate_categories(request))
+        # logging.warning(calculate_embeddings(request))
         answer = ModelServiceAnswer(Categories=calculate_categories(request), Embeddings=calculate_embeddings(request))
         return answer
 
