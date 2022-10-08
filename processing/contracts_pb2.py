@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ontracts.proto\x12\tcontracts\"]\n\x0bNewsMessage\x12\r\n\x05Title\x18\x01 \x01(\t\x12\x0c\n\x04\x42ody\x18\x02 \x01(\t\x12\x11\n\tTimestamp\x18\x03 \x01(\x03\x12\x12\n\nEmbeddings\x18\x04 \x03(\x01\x12\n\n\x02ID\x18\x05 \x01(\t2Q\n\x0cModelService\x12\x41\n\rGetEmbeddings\x12\x16.contracts.NewsMessage\x1a\x16.contracts.NewsMessage\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ontracts.proto\x12\tcontracts\"]\n\x0bNewsMessage\x12\r\n\x05Title\x18\x01 \x01(\t\x12\x0c\n\x04\x42ody\x18\x02 \x01(\t\x12\x11\n\tTimestamp\x18\x03 \x01(\x03\x12\x12\n\nEmbeddings\x18\x04 \x03(\x01\x12\n\n\x02ID\x18\x05 \x01(\t\"(\n\x12ModelServiceAnswer\x12\x12\n\nEmbeddings\x18\x01 \x03(\x01\x32X\n\x0cModelService\x12H\n\rGetEmbeddings\x12\x16.contracts.NewsMessage\x1a\x1d.contracts.ModelServiceAnswer\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'contracts_pb2', globals())
@@ -22,6 +22,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _NEWSMESSAGE._serialized_start=30
   _NEWSMESSAGE._serialized_end=123
-  _MODELSERVICE._serialized_start=125
-  _MODELSERVICE._serialized_end=206
+  _MODELSERVICEANSWER._serialized_start=125
+  _MODELSERVICEANSWER._serialized_end=165
+  _MODELSERVICE._serialized_start=167
+  _MODELSERVICE._serialized_end=255
 # @@protoc_insertion_point(module_scope)

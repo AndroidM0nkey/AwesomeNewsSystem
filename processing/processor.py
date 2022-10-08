@@ -1,7 +1,11 @@
 import pika, sys, os
 
+import grpc
 from contracts_pb2 import NewsMessage
+import contracts_pb2_grpc
 
+
+MODEL_SERVICE_IP = 'localhost:8001'
 
 def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
@@ -12,7 +16,14 @@ def main():
     def callback(ch, method, properties, body):
         msg = NewsMessage()
         msg.ParseFromString(body)
-        print(" [x] Received %r" % msg.Timestamp)
+
+        with grpc.insecure_channel(MODEL_SERVICE_IP) as channel:
+            stub = contracts_pb2_grpc.ModelServiceStub(channel)
+            response = stub.GetEmbeddings(msg)
+
+        msg.Embeddings.extend(response.Embeddings)
+
+        print(" [x] Received" + str(msg.Embeddings))
 
     channel.basic_consume(queue='news_processor', on_message_callback=callback, auto_ack=True)
 

@@ -5,7 +5,7 @@ package contracts;
 // Model service API
 
 service ModelService {
-  rpc GetEmbeddings (NewsMessage) returns (NewsMessage) {}
+  rpc GetEmbeddings (NewsMessage) returns (ModelServiceAnswer) {}
 }
 
 
@@ -17,4 +17,8 @@ message NewsMessage {
   int64 Timestamp = 3;
   repeated double Embeddings = 4;
   string ID = 5;
+}
+
+message ModelServiceAnswer {
+  repeated double Embeddings = 1;
 }
