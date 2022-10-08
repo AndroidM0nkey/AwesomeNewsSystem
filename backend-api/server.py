@@ -42,10 +42,17 @@ def get_users():
         best_ids = best_ids[:-2]
 
         answer = {}
-        for row in cur.execute(""" SELECT TITLE,BODY,ID FROM newsdata WHERE ID IN (%s))""", best_ids)
-            answer.
-            
-
-
+        for row in cur.execute(""" SELECT TITLE,BODY,ID FROM newsdata WHERE ID IN (%s))""", best_ids):
+            news = {
+                'Title': row[0],
+                'Body': row[1]
+            }
+            answer.add(news)
+        
+        return jsonify({'data': answer})
         
     return jsonify({'data': 'not ok'})
+
+if __name__ == '__main__':
+  
+    app.run(debug = True, host='0.0.0.0', port=8002)

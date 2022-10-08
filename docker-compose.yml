@@ -11,6 +11,13 @@ services:
       postgres:
         condition: service_healthy
 
+  backend-api:
+    build: ./backend-api
+    network_mode: "host"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
