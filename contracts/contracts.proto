@@ -5,7 +5,7 @@ package contracts;
 // Model service API
 
 service ModelService {
-  rpc GetEmbeddings (NewsMessage) returns (ModelServiceAnswer) {}
+  rpc GetModelServiceAnswer (NewsMessage) returns (ModelServiceAnswer) {}
 }
 
 
@@ -15,10 +15,16 @@ message NewsMessage {
   string Title = 1;
   string Body = 2;
   int64 Timestamp = 3;
-  repeated double Embeddings = 4;
-  string ID = 5;
+  string ID = 4;
+  ModelServiceAnswer ML = 5;
 }
 
 message ModelServiceAnswer {
-  repeated double Embeddings = 1;
+  repeated CategoryInfo Categories = 1;
+  repeated double Embeddings = 2;
+}
+
+message CategoryInfo {
+  optional string Category = 1;
+  optional double Probability = 2;
 }

@@ -16,8 +16,8 @@ class ModelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetEmbeddings = channel.unary_unary(
-                '/contracts.ModelService/GetEmbeddings',
+        self.GetModelServiceAnswer = channel.unary_unary(
+                '/contracts.ModelService/GetModelServiceAnswer',
                 request_serializer=contracts__pb2.NewsMessage.SerializeToString,
                 response_deserializer=contracts__pb2.ModelServiceAnswer.FromString,
                 )
@@ -28,7 +28,7 @@ class ModelServiceServicer(object):
 
     """
 
-    def GetEmbeddings(self, request, context):
+    def GetModelServiceAnswer(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,8 +37,8 @@ class ModelServiceServicer(object):
 
 def add_ModelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetEmbeddings': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetEmbeddings,
+            'GetModelServiceAnswer': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetModelServiceAnswer,
                     request_deserializer=contracts__pb2.NewsMessage.FromString,
                     response_serializer=contracts__pb2.ModelServiceAnswer.SerializeToString,
             ),
@@ -55,7 +55,7 @@ class ModelService(object):
     """
 
     @staticmethod
-    def GetEmbeddings(request,
+    def GetModelServiceAnswer(request,
             target,
             options=(),
             channel_credentials=None,
@@ -65,7 +65,7 @@ class ModelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/contracts.ModelService/GetEmbeddings',
+        return grpc.experimental.unary_unary(request, target, '/contracts.ModelService/GetModelServiceAnswer',
             contracts__pb2.NewsMessage.SerializeToString,
             contracts__pb2.ModelServiceAnswer.FromString,
             options, channel_credentials,
