@@ -1,6 +1,6 @@
 import grpc
 import contracts_pb2_grpc
-from contracts_pb2 import ModelServiceAnswer
+from contracts_pb2 import ModelServiceAnswer, CategoryInfo
 
 from concurrent import futures
 import logging
@@ -17,10 +17,18 @@ def calculate_embeddings(proto):
     return [1.0, 0.1]
 
 
+def calculate_categories(proto):
+    # dummu output
+    categoriesList = []
+    for i in range(2):
+        catInfo = CategoryInfo(Category=('Cat' + str(i)), Probability=(i + 1))
+        categoriesList.append(catInfo)
+    return categoriesList
+
 class ModelService(contracts_pb2_grpc.ModelServiceServicer):
 
-    def GetEmbeddings(self, request, context):
-        answer = ModelServiceAnswer(Embeddings=calculate_embeddings(request))
+    def GetModelServiceAnswer(self, request, context):
+        answer = ModelServiceAnswer(Categories=calculate_categories(request), Embeddings=calculate_embeddings(request))
         return answer
 
 

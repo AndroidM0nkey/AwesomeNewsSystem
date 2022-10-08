@@ -19,11 +19,12 @@ def main():
 
         with grpc.insecure_channel(MODEL_SERVICE_IP) as channel:
             stub = contracts_pb2_grpc.ModelServiceStub(channel)
-            response = stub.GetEmbeddings(msg)
+            response = stub.GetModelServiceAnswer(msg)
 
-        msg.Embeddings.extend(response.Embeddings)
+        msg.ML.CopyFrom(response)
 
-        print(" [x] Received" + str(msg.Embeddings))
+        for item in msg.ML.Categories:
+            print(" [x] Received" + str(item.Probability))
 
     channel.basic_consume(queue='news_processor', on_message_callback=callback, auto_ack=True)
 
