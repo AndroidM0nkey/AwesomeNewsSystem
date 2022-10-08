@@ -4,6 +4,8 @@ import grpc
 from contracts_pb2 import NewsMessage
 import contracts_pb2_grpc
 
+import psycopg2
+
 
 MODEL_SERVICE_IP = 'localhost:8001'
 
@@ -22,6 +24,17 @@ def main():
             response = stub.GetModelServiceAnswer(msg)
 
         msg.ML.CopyFrom(response)
+
+        conn = psycopg2.connect(dbname='db', user='postgres', 
+                        password='postgres', host='localhost')
+        cur = conn.cursor()
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+
+        db_version = cur.fetchone()
+        print(db_version)
+
+        cur.close()
 
         for item in msg.ML.Categories:
             print(" [x] Received" + str(item.Probability))
