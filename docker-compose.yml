@@ -1,25 +1,29 @@
-version: "3"
+version: "2.4"
 services:
   model_service:
     build: ./model_service
-    ports:
-      - 8000:8000
     network_mode: "host"
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    expose:
+      - "5672"
+      - "15672"
     network_mode: "host"
+    healthcheck:
+        test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+        interval: 10s
+        timeout: 10s
+        retries: 5
 
   processing:
     build: ./processing
-    ports:
-        - 5672:5672
-        - 15672:15672
     network_mode: "host"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+    rabbitmq_data:
+    rabbitmq_log:

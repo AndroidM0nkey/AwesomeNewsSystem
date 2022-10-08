@@ -19,7 +19,7 @@ class ModelServiceStub(object):
         self.GetEmbeddings = channel.unary_unary(
                 '/contracts.ModelService/GetEmbeddings',
                 request_serializer=contracts__pb2.NewsMessage.SerializeToString,
-                response_deserializer=contracts__pb2.NewsMessage.FromString,
+                response_deserializer=contracts__pb2.ModelServiceAnswer.FromString,
                 )
 
 
@@ -40,7 +40,7 @@ def add_ModelServiceServicer_to_server(servicer, server):
             'GetEmbeddings': grpc.unary_unary_rpc_method_handler(
                     servicer.GetEmbeddings,
                     request_deserializer=contracts__pb2.NewsMessage.FromString,
-                    response_serializer=contracts__pb2.NewsMessage.SerializeToString,
+                    response_serializer=contracts__pb2.ModelServiceAnswer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -67,6 +67,6 @@ class ModelService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/contracts.ModelService/GetEmbeddings',
             contracts__pb2.NewsMessage.SerializeToString,
-            contracts__pb2.NewsMessage.FromString,
+            contracts__pb2.ModelServiceAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
