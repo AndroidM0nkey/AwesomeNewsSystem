@@ -10,5 +10,5 @@ if __name__ == '__main__':
         'timestampStart': 1,
         'timestampEnd': 50
     }
-    r = requests.get(url = (URL + '/get_digest'), headers = headers, data = json.dumps(data))
+    r = requests.get(url = (URL + '/get_trend'), headers = headers, data = json.dumps(data))
     print(r.json())

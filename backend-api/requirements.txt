@@ -3,3 +3,9 @@ grpcio-tools
 protobuf
 psycopg2
 flask
+scipy
+sklearn
+nltk
+numpy
+gensim==3.6.0
+pandas

@@ -4,13 +4,14 @@ from contracts_pb2 import NewsMessage
 import logging
 
 
-def bd_update(csv: string, verbose=500):
+
+def bd_update(csv, verbose=500):
     """
         input:
             csv: csv file path to data for update
             verbose: logging info, show every i % verbose iterations
     """
-    df = pd.read_csv()
+    df = pd.read_csv(csv)
     
     connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='localhost'))
@@ -37,3 +38,5 @@ def bd_update(csv: string, verbose=500):
 
     print("DONE")
     connection.close()
+
+bd_update('final2.csv')
