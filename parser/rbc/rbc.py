@@ -1,9 +1,12 @@
 from requests import get
 from bs4 import BeautifulSoup
 from time import sleep
+from contracts_pb2 import ParsedArticle
+from datetime import datetime
 
 INTERVAL = 10 # in seconds 
 processed = "processed.txt"
+queue = "news_processor"
 
 def validate(href):
     with open(processed,'r',encoding = 'utf-8') as f:
@@ -18,6 +21,13 @@ def processed_href(href):
         f.write(href + "\n")
 
 def start():
+
+    connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host='localhost'))
+    channel = connection.channel()
+
+    channel.queue_declare(queue=queue)
+
     while 1:
         r = get(f"https://www.rbc.ru/v10/ajax/get-news-by-filters/?category=economics&limit=20")
         if r.status_code != 200:
@@ -51,9 +61,17 @@ def start():
             text = art.get_text(separator=" ").strip()
             text = text.replace("     www.adv.rbc.ru      ", "")
             text = text.replace("\n", "")
-            print(title) # publish to queue
+            # print(title) # publish to queue
+            nm = ParsedArticle(
+                Title=title.strip(),
+                Body=text,
+                Timestamp=datetime.utcnow().timestamp()
+            )
+            channel.basic_publish(exchange='', routing_key='rbc', body=nm.SerializeToString())
+
             processed_href(cur_href)
         sleep(INTERVAL)
+    connection.close()
 
 if __name__ == '__main__':
     start()

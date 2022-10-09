@@ -39,10 +39,23 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+
+  forbes:
+    build: ./parser/forbes
+    network_mode: "host"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   
+  rbc:
+    build: ./parser/rbc
+    network_mode: "host"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   postgres:
     image: postgres:10
-    restart: always
     environment:
       - POSTGRES_DB=db
       - POSTGRES_USER=postgres
