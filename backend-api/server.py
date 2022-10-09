@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 
 from contracts_pb2 import ModelServiceAnswer
+
+import psycopg2
+import logging
   
 app = Flask(__name__)
 
@@ -21,7 +24,9 @@ def get_users():
 
         k = 3
         decoded_rows = []
-        for row in cur.execute("""SELECT TIMESTAMP,ID,ML FROM newsdata WHERE TIMESTAMP > %s AND TIMESTAMP < %s """, (timestampStart, timestampEnd)):
+        cur.execute("""SELECT TIMESTAMP,ID,ML FROM newsdata WHERE TIMESTAMP > %s AND TIMESTAMP < %s """, (timestampStart, timestampEnd))
+        obj = cur.fetchall()
+        for row in obj:
             ml = ModelServiceAnswer()
             ml.ParseFromString(row[2])
 
@@ -29,25 +34,33 @@ def get_users():
                 if item.Category == category:
                     decoded_rows.append((item.Probability, row[1]))
         
-        sort(decoded_rows)
-
+        decoded_rows.sort()
         size = len(decoded_rows)
-        real_size = max(size, k)
+        real_size = min(size, k)
 
         best_rows = decoded_rows[:real_size]
-        best_ids = ''
-        for item in best_ids:
-            best_ids+=str(item[1])
-            best_ids+=', '
-        best_ids = best_ids[:-2]
 
-        answer = {}
-        for row in cur.execute(""" SELECT TITLE,BODY,ID FROM newsdata WHERE ID IN (%s))""", best_ids):
+        best_ids = ''
+        for item in best_rows:
+            best_ids+="\'"
+            best_ids+=str(item[1])
+            best_ids+="\'"
+            best_ids+=', '
+
+        
+        best_ids = best_ids[:-2]
+        logging.warning(type(best_ids))
+        logging.warning(best_ids)
+
+        answer = []
+        cur.execute("""SELECT TITLE,BODY,ID FROM newsdata WHERE ID IN (""" + best_ids + """)""")
+        obj = cur.fetchall()
+        for row in obj:
             news = {
                 'Title': row[0],
                 'Body': row[1]
             }
-            answer.add(news)
+            answer.append(news)
         
         return jsonify({'data': answer})
         

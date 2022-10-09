@@ -5,6 +5,7 @@ from contracts_pb2 import NewsMessage, ModelServiceAnswer
 import contracts_pb2_grpc
 
 import psycopg2
+import string, random
 
 
 def get_random_string():
@@ -37,9 +38,10 @@ def main():
         ml = msg.ML
         ml.CopyFrom(msg.ML)
         mlString = ml.SerializeToString()
-        cur.execute("""INSERT INTO newsdata (TIMESTAMP,TITLE,BODY,ID,ML) VALUES (%s, %s, %s, %s, %s)""", (msg.Timestamp, msg.Title, msg.Body, get_random_string, mlString))
-
+        cur.execute("""INSERT INTO newsdata (TIMESTAMP,TITLE,BODY,ID,ML) VALUES (%s, %s, %s, %s, %s)""", (msg.Timestamp, msg.Title, msg.Body, get_random_string(), mlString))
+        conn.commit()
         cur.close()
+        conn.close()
 
         for item in msg.ML.Categories:
             print(" [x] Received" + str(item.Probability))

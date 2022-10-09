@@ -6,10 +6,10 @@ try:
     cur = conn.cursor()
 
     create_table_query = '''CREATE TABLE newsdata
-                            (TIMESTAMP INT PRIMARY KEY NOT NULL,
+                            (TIMESTAMP INT NOT NULL,
                             TITLE           TEXT NOT NULL,
                             BODY            TEXT NOT NULL,
-                            ID              TEXT NOT NULL,
+                            ID              TEXT PRIMARY KEY NOT NULL,
                             ML              bytea NOT NULL); '''
 
     cur.execute(create_table_query)
